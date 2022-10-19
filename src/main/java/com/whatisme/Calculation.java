@@ -1,7 +1,5 @@
 package com.whatisme;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -15,10 +13,10 @@ public class Calculation {
         end = s.length() - 1;
     }
 
-    public BigDecimal calculate() {
-        Deque<BigDecimal> stack = new ArrayDeque<>();
+    public BigFrac calculate() {
+        Deque<BigFrac> stack = new ArrayDeque<>();
         char preSign = '+';
-        BigDecimal num = BigDecimal.ZERO;
+        BigFrac num = BigFrac.ZERO;
         for (; i <= end; ++i) {
             char c = s.charAt(i);
             if (c == ' ')
@@ -28,22 +26,22 @@ public class Calculation {
                 num = calculate();
             }
             if (Character.isDigit(c)) {
-                num = num.multiply(BigDecimal.TEN).add(BigDecimal.valueOf(c - '0'));
+                num = num.multiply(BigFrac.TEN).add(BigFrac.valueOf(c - '0'));
             }
             if (!Character.isDigit(c) || i == end) {
                 switch (preSign) {
                     case '+' -> stack.push(num);
                     case '-' -> stack.push(num.negate());
                     case '*' -> stack.push(stack.pop().multiply(num));
-                    case '/' -> stack.push(stack.pop().divide(num, 100, RoundingMode.UNNECESSARY));
+                    case '/' -> stack.push(stack.pop().divide(num));
                 }
                 preSign = c;
                 if (c == ')')
                     break;
-                num = BigDecimal.ZERO;
+                num = BigFrac.ZERO;
             }
         }
-        BigDecimal ans = BigDecimal.ZERO;
+        BigFrac ans = BigFrac.ZERO;
         while (!stack.isEmpty()) {
             ans = ans.add(stack.pop());
         }
