@@ -1,56 +1,53 @@
 package com.whatisme;
 
-import java.math.BigInteger;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-class Calculation {
+public class Calculation {
     String s;
-    int n;
+    int i, end;
 
     public Calculation(String s) {
         this.s = s;
-        n = s.length();
+        i = 0;
+        end = s.length() - 1;
     }
 
-    private boolean check(char c) {
-        if (Character.isDigit(c))
-            return true;
-        switch (c) {
-            case '+', '-', '*', '/', ' ' -> {
-                return true;
-            }
-            default -> {
-                return false;
-            }
-        }
-    }
-
-    public String calculate() {
-        Deque<BigInteger> stack = new ArrayDeque<>();
+    public BigFrac calculate() {
+        Deque<BigFrac> stack = new ArrayDeque<>();
         char preSign = '+';
-        BigInteger num = BigInteger.ZERO;
-        for (int i = 0; i < n; ++i) {
-            if (Character.isDigit(s.charAt(i))) {
-                num = num.multiply(BigInteger.TEN).add(BigInteger.valueOf(s.charAt(i) - '0'));
+        BigFrac num = BigFrac.ZERO;
+        for (; i <= end; ++i) {
+            char c = s.charAt(i);
+            if (c == ' ')
+                continue;
+            if (c == '(') {
+                ++i;
+                num = calculate();
             }
-            if (!Character.isDigit(s.charAt(i)) && s.charAt(i) != ' ' || i == n - 1) {
+            if (Character.isDigit(c)) {
+                num = num.multiply(BigFrac.TEN).add(BigFrac.valueOf(c - '0'));
+            }
+            if (!Character.isDigit(c) || i == end) {
+
                 switch (preSign) {
                     case '+' -> stack.push(num);
                     case '-' -> stack.push(num.negate());
                     case '*' -> stack.push(stack.pop().multiply(num));
                     case '/' -> stack.push(stack.pop().divide(num));
                 }
-                preSign = s.charAt(i);
-                if (!check(preSign))
-                    return "Invalid Input";
-                num = BigInteger.ZERO;
+                preSign = c;
+                if (c == ')')
+                    break;
+                num = BigFrac.ZERO;
             }
         }
-        BigInteger ans = BigInteger.ZERO;
+        BigFrac ans = BigFrac.ZERO;
         while (!stack.isEmpty()) {
             ans = ans.add(stack.pop());
         }
-        return ans.toString();
+        return ans;
+
     }
 }
