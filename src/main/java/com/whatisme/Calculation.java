@@ -1,5 +1,6 @@
 package com.whatisme;
 
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -29,6 +30,7 @@ public class Calculation {
                 num = num.multiply(BigFrac.TEN).add(BigFrac.valueOf(c - '0'));
             }
             if (!Character.isDigit(c) || i == end) {
+
                 switch (preSign) {
                     case '+' -> stack.push(num);
                     case '-' -> stack.push(num.negate());
@@ -46,5 +48,6 @@ public class Calculation {
             ans = ans.add(stack.pop());
         }
         return ans;
+
     }
 }
