@@ -13,8 +13,9 @@ public class Main {
     public static void main(String[] args) {
         while (true) {
             String s = input(">>>");
-            if ("exit".equals(s)) break;
-            String ans = new Calculation(s).calculate();
+            if ("exit".equals(s))
+                break;
+            var ans = new Calculation(s).calculate();
             System.out.println(ans);
         }
     }
